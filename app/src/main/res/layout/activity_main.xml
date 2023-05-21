@@ -10,10 +10,11 @@
         android:id="@+id/pdfViewer"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        app:verticalSpace="@dimen/vertical_space"
+        app:isSnapEnabled="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:verticalSpace="@dimen/vertical_space" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

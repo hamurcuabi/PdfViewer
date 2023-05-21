@@ -18,7 +18,9 @@ internal class PdfAdapter(
         return PdfViewerViewHolder(binding)
     }
 
-    override fun getItemCount() = runCatching { renderer.pageCount }.getOrDefault(0)
+    override fun getItemCount() = runCatching {
+        renderer.pageCount
+    }.getOrDefault(0)
 
     override fun onBindViewHolder(holder: PdfViewerViewHolder, position: Int) {
         runCatching {

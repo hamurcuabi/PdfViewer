@@ -12,7 +12,9 @@ import androidx.annotation.DimenRes
 import androidx.annotation.StyleRes
 import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SnapHelper
 import com.hamurcuabi.pdfviewer.adapter.MarginItemDecoration
 import com.hamurcuabi.pdfviewer.adapter.PdfAdapter
 import java.io.File
@@ -32,11 +34,14 @@ class PdfView @JvmOverloads constructor(
 
     private var isZoomEnabled: Boolean = false
 
+    private var isSnapEnabled: Boolean = false
+
     private var pdfViewListener: PdfViewListener? = null
 
     init {
         context.obtainStyledAttributes(attrs, R.styleable.PdfView).run {
             spaceSize = getResourceId(R.styleable.PdfView_verticalSpace, R.dimen.pdf_viewer_default_vertical_space)
+            isSnapEnabled = getBoolean(R.styleable.PdfView_isSnapEnabled, false)
             recycle()
         }
     }
@@ -53,6 +58,10 @@ class PdfView @JvmOverloads constructor(
             addItemDecoration(
                 itemDecoration
             )
+            if (isSnapEnabled) {
+                val snapHelper: SnapHelper = LinearSnapHelper()
+                snapHelper.attachToRecyclerView(this)
+            }
         }
     }
 
