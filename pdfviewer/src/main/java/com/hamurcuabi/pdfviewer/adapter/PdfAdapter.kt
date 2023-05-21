@@ -9,12 +9,13 @@ import com.hamurcuabi.pdfviewer.databinding.ItemPdfPageBinding
 internal class PdfAdapter(
     private val renderer: PdfRenderer,
     private val currentPageWith: Int,
-    private val isZoomEnabled: Boolean
+    private val currentPageHeight: Int,
 ) : RecyclerView.Adapter<PdfViewerViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PdfViewerViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemPdfPageBinding.inflate(inflater, parent, false)
+        binding.imageView.layoutParams.height = currentPageHeight
         return PdfViewerViewHolder(binding)
     }
 
@@ -25,7 +26,7 @@ internal class PdfAdapter(
     override fun onBindViewHolder(holder: PdfViewerViewHolder, position: Int) {
         runCatching {
             val currentPage = renderer.openPage(position)
-            holder.bind(currentPage.renderAndClose(currentPageWith), isZoomEnabled)
+            holder.bind(currentPage.renderAndClose(currentPageWith))
         }
     }
 }

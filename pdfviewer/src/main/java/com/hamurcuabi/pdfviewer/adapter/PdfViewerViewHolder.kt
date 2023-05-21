@@ -8,9 +8,8 @@ class PdfViewerViewHolder(
     private val binding: ItemPdfPageBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(bitmap: Bitmap, isZoomEnabled: Boolean) {
+    fun bind(bitmap: Bitmap) {
         binding.imageView.apply {
-            isZoomable = isZoomEnabled
             setImageBitmap(bitmap)
         }
     }

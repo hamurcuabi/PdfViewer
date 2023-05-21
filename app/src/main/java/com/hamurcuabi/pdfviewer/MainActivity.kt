@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
                 }
             })
 
-            loadPdfWithFile(file = file, isZoomEnabled = true)
+            loadPdfWithFile(file = file)
         }
     }
 

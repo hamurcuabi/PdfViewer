@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.annotation.DimenRes
 import androidx.annotation.StyleRes
+import androidx.core.content.withStyledAttributes
 import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
@@ -28,21 +29,23 @@ class PdfView @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttr, defStyleRes) {
 
     @DimenRes
-    private var spaceSize: Int
+    private var spaceSize: Int = R.dimen.pdf_viewer_default_vertical_space
 
     private var currentPage: Int = -1
-
-    private var isZoomEnabled: Boolean = false
 
     private var isSnapEnabled: Boolean = false
 
     private var pdfViewListener: PdfViewListener? = null
 
+    private var pageHeight: Int = ViewGroup.LayoutParams.MATCH_PARENT
+
     init {
-        context.obtainStyledAttributes(attrs, R.styleable.PdfView).run {
+        context.withStyledAttributes(attrs, R.styleable.PdfView) {
             spaceSize = getResourceId(R.styleable.PdfView_verticalSpace, R.dimen.pdf_viewer_default_vertical_space)
             isSnapEnabled = getBoolean(R.styleable.PdfView_isSnapEnabled, false)
-            recycle()
+            val heightParams =
+                getInt(R.styleable.PdfView_pageHeightType, PdfLayoutParams.MATCH_PARENT.type)
+            setPageHeight(heightParams)
         }
     }
 
@@ -81,8 +84,8 @@ class PdfView @JvmOverloads constructor(
         val width = Resources.getSystem().displayMetrics.widthPixels
         val adapter = PdfAdapter(
             renderer = pdfRenderer,
-            currentPageWith = width,
-            isZoomEnabled = isZoomEnabled
+            currentPageHeight = pageHeight,
+            currentPageWith = width
         )
 
         pdfPageView.adapter = adapter
@@ -121,13 +124,11 @@ class PdfView @JvmOverloads constructor(
         pdfPageView.addOnScrollListener(scrollListener)
     }
 
-    fun loadPdfWithFile(file: File?, isZoomEnabled: Boolean) {
+    fun loadPdfWithFile(file: File?) {
         if (file == null) {
             pdfViewListener?.onError?.invoke(Exception("File cannot be null"))
             return
         }
-
-        this.isZoomEnabled = isZoomEnabled
 
         runCatching {
             loadPdfView(pdfPageView)
@@ -140,6 +141,26 @@ class PdfView @JvmOverloads constructor(
 
     fun setPdfViewListener(pdfViewListener: PdfViewListener) {
         this.pdfViewListener = pdfViewListener
+    }
+
+    private fun setPageHeight(type: Int) {
+        val viewParams = when (PdfLayoutParams.fromValue(type)) {
+            PdfLayoutParams.MATCH_PARENT -> ViewGroup.LayoutParams.MATCH_PARENT
+            PdfLayoutParams.WRAP_CONTENT -> ViewGroup.LayoutParams.WRAP_CONTENT
+        }
+        pageHeight = viewParams
+    }
+
+    enum class PdfLayoutParams(val type: Int) {
+        MATCH_PARENT(0),
+        WRAP_CONTENT(1);
+
+        companion object {
+
+            fun fromValue(type: Int): PdfLayoutParams {
+                return values().firstOrNull { it.type == type } ?: MATCH_PARENT
+            }
+        }
     }
 }
 
