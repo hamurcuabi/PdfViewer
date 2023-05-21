@@ -3,6 +3,14 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
+ext {
+    PUBLISH_GROUP_ID = 'io.github.hamurcuabi'
+    PUBLISH_VERSION = '0.1'
+    PUBLISH_ARTIFACT_ID = 'PdfViewer'
+}
+
+apply from: 'publish-remote.gradle'
+
 android {
     namespace 'com.hamurcuabi.pdfviewer'
     compileSdk 33
@@ -37,7 +45,6 @@ android {
 dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    testImplementation 'junit:junit:4.13.2'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
 }
