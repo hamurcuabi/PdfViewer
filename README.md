@@ -1,5 +1,5 @@
 # PdfViewer
-![](https://img.shields.io/badge/maven%20central-1.0.0-green)
+![](https://img.shields.io/badge/maven%20central-1.1.0-blue)
 
 PdfViewer is a lightweight and easy-to-use library for loading PDF views in your Android applications. With PdfViewer, developers can effortlessly display PDF files from local files or base64 strings, without requiring any additional permissions. This library simplifies the process of integrating PDF viewing functionality into your app, providing a seamless experience for your users.
 
