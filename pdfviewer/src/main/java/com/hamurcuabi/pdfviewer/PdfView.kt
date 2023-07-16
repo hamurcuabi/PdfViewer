@@ -5,6 +5,7 @@ import android.content.res.Resources
 import android.graphics.pdf.PdfRenderer
 import android.os.ParcelFileDescriptor
 import android.util.AttributeSet
+import android.util.Base64
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -18,8 +19,11 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SnapHelper
 import com.hamurcuabi.pdfviewer.adapter.MarginItemDecoration
 import com.hamurcuabi.pdfviewer.adapter.PdfAdapter
+import java.io.BufferedOutputStream
 import java.io.File
+import java.io.FileOutputStream
 
+private const val PDF_FILE_NAME = "pdf_view_cached.pdf"
 
 class PdfView @JvmOverloads constructor(
     context: Context,
@@ -137,6 +141,24 @@ class PdfView @JvmOverloads constructor(
         }.onFailure {
             pdfViewListener?.onError?.invoke(it)
         }
+    }
+
+    fun loadPdfWithBase64(base64String: String?) {
+        val file = saveBase64AsPdfToCache(base64String)
+        loadPdfWithFile(file)
+    }
+
+    private fun saveBase64AsPdfToCache(base64String: String?): File? {
+        return runCatching {
+            val decodedBytes = Base64.decode(base64String, Base64.DEFAULT)
+            val cacheDir = context.cacheDir
+            val file = File(cacheDir, PDF_FILE_NAME)
+            BufferedOutputStream(FileOutputStream(file)).use { outputStream ->
+                outputStream.write(decodedBytes)
+                outputStream.flush()
+            }
+            file
+        }.getOrNull()
     }
 
     fun setPdfViewListener(pdfViewListener: PdfViewListener) {
