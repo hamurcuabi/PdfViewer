@@ -34,10 +34,10 @@ dependencies {
 }
 ```
 
-For compose add only this func 
-
+For compose add only this function
+```
 @Composable
-fun PdfViewer() {
+ fun PdfViewer() {
     AndroidView(
         factory = { context ->
             PdfView(context).apply {
@@ -53,7 +53,9 @@ fun PdfViewer() {
 
                     override var onPageChange: ((currentPage: Int, totalPage: Int) -> Unit)? =
                         { currentPage, totalPage ->
-                            println("PdfViewListener: onPageChange currentPage:$currentPage totalPage:$totalPage")
+                            println(
+			    "PdfViewListener: onPageChange currentPage:$currentPage totalPage:$totalPage"
+       )
                         }
                 })
 
@@ -62,7 +64,7 @@ fun PdfViewer() {
         },
     )
 }
-
+```
 
 For XML layout file, add the PdfViewer component
 
