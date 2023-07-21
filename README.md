@@ -34,7 +34,37 @@ dependencies {
 }
 ```
 
-in your XML layout file, add the PdfViewer component
+For compose add only this func 
+
+@Composable
+fun PdfViewer() {
+    AndroidView(
+        factory = { context ->
+            PdfView(context).apply {
+                setPdfViewListener(object : PdfViewListener {
+
+                    override var onLoad: (() -> Unit)? = {
+                        println("PdfViewListener: onLoad")
+                    }
+
+                    override var onError: ((throwable: Throwable) -> Unit)? = {
+                        println("PdfViewListener: onError")
+                    }
+
+                    override var onPageChange: ((currentPage: Int, totalPage: Int) -> Unit)? =
+                        { currentPage, totalPage ->
+                            println("PdfViewListener: onPageChange currentPage:$currentPage totalPage:$totalPage")
+                        }
+                })
+
+                loadPdfWithBase64(base64String = YOUR_STRING)
+            }
+        },
+    )
+}
+
+
+For XML layout file, add the PdfViewer component
 
 ```
       <com.hamurcuabi.pdfviewer.PdfView
